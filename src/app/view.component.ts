@@ -1,9 +1,10 @@
-import { Component, VERSION } from '@angular/core';
+import { Component, Input, VERSION } from '@angular/core';
 
 @Component({
-  selector: 'view',
+  selector: 'app-view',
   templateUrl: './view.component.html',
 })
 export class ViewComponent {
-  name = 'Angular ' + VERSION.major;
+  @Input() name = "";
+  
 }
