@@ -5,6 +5,6 @@ import { Component, Input, VERSION } from '@angular/core';
   templateUrl: './view.component.html',
 })
 export class ViewComponent {
-  @Input() name = "";
-  
+  @Input() name;
+  @Input() age;
 }
