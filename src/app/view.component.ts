@@ -1,4 +1,4 @@
-import { Component, Input, VERSION } from '@angular/core';
+import { Component, EventEmitter, Input, Output, VERSION } from '@angular/core';
 
 @Component({
   selector: 'app-view',
@@ -7,4 +7,10 @@ import { Component, Input, VERSION } from '@angular/core';
 export class ViewComponent {
   @Input() name;
   @Input() age;
+  @Output() startedit = new EventEmitter<any>();
+
+  edit(){
+    this.startedit.emit();
+
+  }
 }

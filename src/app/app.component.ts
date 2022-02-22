@@ -1,12 +1,7 @@
-import {
-  Component,
-  ComponentRef,
-  VERSION,
-  ViewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { EditComponent } from './edit.component';
 import { ViewComponent } from './view.component';
+import { ProfileDirective } from './profile.directive';
 
 @Component({
   selector: 'my-app',
@@ -14,32 +9,33 @@ import { ViewComponent } from './view.component';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  @ViewChild('container', { static: true, read: ViewContainerRef })
-  entry: ViewContainerRef;
+  @ViewChild(ProfileDirective, { static: true }) profileHost!: ProfileDirective;
   name = 'Pushkar';
   age = 29;
-  constructor(private viewContainerRef: ViewContainerRef) {
-    //    this.viewContainerRef.createComponent(ViewComponent);
-    let component: ComponentRef<ViewComponent> =
-      this.viewContainerRef.createComponent(ViewComponent);
-    component.instance.name = this.name;
-    component.instance.age = this.age;
+  ngOnInit(): void {
+    this.view();
   }
   edit() {
-    this.viewContainerRef.clear();
-    let component: ComponentRef<EditComponent> =
-      this.viewContainerRef.createComponent(EditComponent);
-    component.instance.name = this.name;
-    component.instance.age = this.age;
-    component.instance.nameChanged.subscribe((msg) => this.dataChanged(msg));
+    let viewContainerRef = this.profileHost.viewContainerRef;
+    viewContainerRef.clear();
+    let componentRef =
+      viewContainerRef.createComponent<EditComponent>(EditComponent);
+    componentRef.instance.name = this.name;
+    componentRef.instance.age = this.age;
+    componentRef.instance.nameChanged.subscribe((msg) => this.dataChanged(msg));
+  }
+  view() {
+    let viewContainerRef = this.profileHost.viewContainerRef;
+    viewContainerRef.clear();
+    let componentRef =
+      viewContainerRef.createComponent<ViewComponent>(ViewComponent);
+    componentRef.instance.name = this.name;
+    componentRef.instance.age = this.age;
+    componentRef.instance.startedit.subscribe((msg) => this.edit());
   }
   dataChanged(e) {
     this.name = e.name;
     this.age = e.age;
-    this.viewContainerRef.clear();
-    let component: ComponentRef<ViewComponent> =
-      this.viewContainerRef.createComponent(ViewComponent);
-    component.instance.name = this.name;
-    component.instance.age = this.age;
+    this.view();
   }
 }
